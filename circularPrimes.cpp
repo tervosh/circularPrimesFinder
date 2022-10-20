@@ -23,18 +23,16 @@ int rotateNum(int i, int d) {
     return (i);
 }
 
-bool isPrimeCheck(int i) {
-    int q;
-    for (q = 2; q <= i / 2; q++) {
-        if (i % q == 0) {
-            return false;
-            break;
-        }
+bool isPrimeCheck(int i, vector<bool> primes) {
+    if (primes[i]) {
+        return true;
     }
-    return true;
+    else {
+        return false;
+    }
 }
 
-bool isCircularPrime(int i) {
+bool isCircularPrime(int i, vector<bool> primes) {
     //cout << "Is CP called on " << i << "\n"; 
     if (i < 10) {
         cout << i << " is circular prime" << endl;
@@ -50,7 +48,7 @@ bool isCircularPrime(int i) {
         if (z == 1 || z == 3 || z == 7 || z == 9) {
             while (q && x <= digits) {
                 w = rotateNum(w, digits);
-                q = isPrimeCheck(w);
+                q = isPrimeCheck(w, primes);
                 x++;
             }
             if (q) {
@@ -75,7 +73,7 @@ int sieve(int n) {
         if (is_prime[p]) {
             int f = p / (int)(pow(10, findDigits(p) - 1));
             if (p < 10 || f == 1 || f == 3 || f == 7 || f == 9) {
-                future <bool> asyncFunction = async(&isCircularPrime, p);
+                future <bool> asyncFunction = async(&isCircularPrime, p, is_prime);
             }
         }
             
@@ -85,14 +83,13 @@ int sieve(int n) {
 
 
 int main() {
-    int i, n;
+    int n;
     cout << "Enter a maximum number to check: ";
     cin >> n;
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     sieve(n);
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds> (end - begin).count() << "[ms]" << std::endl;
-    cout << "Enter 0 to exit";
-    cin >> n;
+    system("pause");
     return 0;
 }
